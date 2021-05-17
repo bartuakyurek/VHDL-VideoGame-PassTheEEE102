@@ -1,0 +1,105 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\ri-44\partightenfactor0
+
+\f0\fs18 \cf0 library IEEE;\
+use IEEE.STD_LOGIC_1164.all;\
+use IEEE.NUMERIC_STD.all;\
+\
+entity playing_screen is --just for the playing state of the game, at the final stage this will be multiplexed too\
+\
+\'a0 port (    pixel_clk : in\'a0 std_logic;\
+\'a0 \'a0	--reset : in\'a0 std_logic;\
+\
+\pard\pardeftab720\fi708\ri-44\partightenfactor0
+\cf0 disp_ena :  in std_logic;  \
+row :  in std_logic_vector (9 downto 0);\
+col :  in std_logic_vector (9 downto 0);    \
+\pard\pardeftab720\ri-44\partightenfactor0
+\cf0 \
+	char_on : in std_logic; --wire these at the topmodule because \
+	sheet_on : in std_logic; --we shall not instantiate those right now, we are not going to\
+\pard\pardeftab720\fi708\ri-44\partightenfactor0
+\cf0 signal char_rgb : in std_logic_vector (11 downto 0); --assign their inputs but only outputs\
+signal sheet_rgb : in std_logic_vector (11 downto 0);\
+\pard\pardeftab720\ri-44\partightenfactor0
+\cf0 \
+--future upgrade: game state will tell to stop collecting sheets, and enable the lab with instructor, replace idle with final addr\
+\
+\pard\pardeftab720\fi708\ri-44\partightenfactor0
+\cf0 playing_rgb : out std_logic_vector (11 downto 0)); --will assign r-g-b separately at the topmodule\
+\
+\pard\pardeftab720\ri-44\partightenfactor0
+\cf0 end playing_screen ;\
+\
+architecture Behavioral of playing_screen  is\
+\
+signal background_addr : std_logic_vector (17 downto 0) := (row * 640) + col; --if arithmetic is not possible\
+							             --use the equivalent binary operation \
+signal background_rgb : std_logic_vector (11 downto 0);		-- check out the calculations again\
+\
+\
+signal idle_addr : std_logic_vector (15 downto 0) := (row * 640) + col) - (640 * 380); --this can give an error\
+signal idle_rgb : std_logic_vector (11 downto 0);		             --addr should be within 640x100\
+\
+								--future: at the final stage, idle will	\
+								--change to instruction so its addr \
+								--should be adjusted with states\
+						--if game_state /= final_stage then idle addr is the first part\
+begin\
+\
+background_rom_unit: background_rom port map( clk => pixel_clk, addr => background_addr, dout => background_rgb); \
+\
+idle_rom_unit: idle_rom port map( clk => pixel_clk, addr => idle_addr, dout => idle_rgb); \
+\
+\
+	process( pixel_clk, disp_ena, char_on)\
+\pard\pardeftab720\li708\fi708\ri-44\partightenfactor0
+\cf0 \
+begin\
+\
+--future screens: , sheet_on, lab_on, \
+--start_on, phase1_on, phase2_on, final_on will be on other multiplexer i think\
+\pard\pardeftab720\ri-44\partightenfactor0
+\cf0 \
+\pard\pardeftab720\li708\fi708\ri-44\partightenfactor0
+\cf0 --if (reset = \'911\'92) then  --set all to idle\
+\pard\pardeftab720\li708\ri-44\partightenfactor0
+\cf0 	--end if;\
+\
+	if ( disp_ena = \'910\'92 ) then --blanking\
+\
+                     playing_rgb <= \'93000000000000\'94; --or we should say \'93-----------\'93, I\'92ll examine for the best									-- possible design\
+\
+	else --display the objects\
+\
+		if (char_on) then\
+			playing_rgb <= char_rgb;\
+\
+\pard\pardeftab720\li1416\fi708\ri-44\partightenfactor0
+\cf0 --elsif (sheet_on) then playing_rgb <= sheet_rgb;\
+\pard\pardeftab720\li708\ri-44\partightenfactor0
+\cf0 		--elsif ( AND game_state = \'93\'94) then --game_state = final\
+\
+		else --further upgrade will enable game states\
+			-- note that the idle is going to change then\
+\
+			playing_rgb <= background_rgb; --at final stage change all \'93backgrounds\'94 to \
+							--\'93floor\'94 to make it meaningfulbb\
+\pard\pardeftab720\ri-44\partightenfactor0
+\cf0 		end if;\
+\pard\pardeftab720\li708\ri-44\partightenfactor0
+\cf0 \
+end process;\
+\pard\pardeftab720\ri-44\partightenfactor0
+\cf0 \
+end Behavioral;\
+\
+\pard\pardeftab720\ri-44\partightenfactor0
+
+\fs24 \cf0 \
+}
