@@ -4,6 +4,10 @@ Check out [1] for a cooler Verilog version! I used their bmp to coe file genera
 
 <img width="543" alt="Ekran Resmi 2019-03-14 22 47 58" src="https://user-images.githubusercontent.com/77360680/118501123-13e53100-b731-11eb-96c3-1b77f180b318.png">
 
+<img width="900" alt="Screen Shot 2021-05-17 at 17 04 31" src="https://user-images.githubusercontent.com/77360680/118502583-81459180-b732-11eb-8922-efb849c71dbd.png">
+
+<img width="503" alt="Screen Shot 2021-05-17 at 17 04 16" src="https://user-images.githubusercontent.com/77360680/118502415-5a875b00-b732-11eb-8c12-a165f1973b4a.png">
+
 #### References 
 
 [1] Embedded Thoughts. “Yoshi's Nightmare: FPGA Based Video Game.” Embedded Thoughts,
